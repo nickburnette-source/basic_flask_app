@@ -1,0 +1,82 @@
+{% extends "bootstrap/base.html" %}
+
+{% block head %}
+{{super()}}
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+{% block favicon %}<link rel="shortcut icon" href="/static/favicon.ico">{% endblock %}
+{% block feeds %}{% endblock %}
+{% endblock %}
+
+
+{% block title %}
+  Dashboard
+{% endblock %}
+
+{% block styles %}
+  {{super()}}
+  <link rel="stylesheet" href="/static/dashboard.css">
+{% endblock %}
+
+<!--How to load in database data from endpoint-->
+{% block scripts%}
+  {{super()}}
+{% endblock %}
+
+{% block content %}
+  <script type="text/javascript" src="/static/database_api.js"></script>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Welcome, {{ name }}</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('settings') }}">Settings</a></li>
+            <li><a href="{{ url_for('profile') }}">Profile</a></li>
+            <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+          </ul>
+          <!--Search bar-->
+          <!--<form class="navbar-form navbar-right">-->
+            <!--<input type="text" class="form-control" placeholder="Search...">-->
+          <!--</form>-->
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 col-lg-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li id="Notifications" class="active"><a href="#All">Notifications<span class="sr-only">(current)</span></a></li>
+          </ul>
+        </div>
+
+
+
+        <div id="TableWorkspace" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 col-lg-10 col-lg-offset-2 main">
+          <div>
+              <h1 id="page-header" class="page-header">Notifcations</h1>
+
+          </div>
+          <div class="table-responsive">
+            <h3>Your notifications will appear here when you received them.</h3>
+          </div>
+        </div>
+
+        <div id="loading" class="loader">
+        </div>
+
+      </div>
+    </div>
+
+
+{% endblock %}
+

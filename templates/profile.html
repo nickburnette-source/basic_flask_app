@@ -1,0 +1,180 @@
+{% extends "bootstrap/base.html" %}
+
+{% block head %}
+{{super()}}
+{% block favicon %}<link rel="shortcut icon" href="/static/favicon.ico">{% endblock %}
+{% block feeds %}{% endblock %}
+{% endblock %}
+
+
+{% block title %}
+  Dashboard
+{% endblock %}
+
+{% block styles %}
+  {{super()}}
+  <link rel="stylesheet" href="/static/dashboard.css">
+{% endblock %}
+
+<!--How to load in database data from endpoint-->
+{% block scripts%}
+  {{super()}}
+{% endblock %}
+
+{% block content %}
+  <script type="text/javascript" src="/static/database_api.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"
+          integrity="sha256-/H4YS+7aYb9kJ5OKhFYPUjSJdrtV6AeyJOtTkw6X72o=" crossorigin="anonymous"></script>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Welcome, {{ name }}</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('settings') }}">Settings</a></li>
+            <li><a href="{{ url_for('profile') }}">Profile</a></li>
+            <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+          </ul>
+          <!--Search bar-->
+          <!--<form class="navbar-form navbar-right">-->
+            <!--<input type="text" class="form-control" placeholder="Search...">-->
+          <!--</form>-->
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-1 sidebar">
+          <ul class="nav nav-sidebar" id="Customized List">
+          </ul>
+        </div>
+        <div id="TableWorkspace" class="col-sm-9 col-sm-offset-3 col-md-11 col-md-offset-1 main">
+          <h1 id="Page Title" class="page-header">User Profile</h1>
+          <ul class="nav nav-sidebar" style="font-size:x-large">
+            <li><a href="#Username">Username:<span id="Username"></span></a></li>
+            <li><a href="#Email">Email:<span id="Email"></span></a></li>
+            <li><a href="#Password">Password<span id="Password"></span></a></li>
+<!--            <li><a href="#Password" style="padding-left: 50px">Current:<span id="CurrentPW"></span></a></li>-->
+            <li><a href="#Password" style="padding-left: 50px">New:<span id="NewPW"></span></a></li>
+            <li><a href="#Password" style="padding-left: 50px">New:<span id="NewPW2"></span></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+<script>
+  // Navbar
+  let Username = "{{ username }}";
+  let Email = "{{ email }}";
+  let Customized = document.getElementById('Customized List');
+  Customized.style.fontSize = 'large';
+  let _list = document.createElement('li');
+  let _link = document.createElement('a');
+  _link.appendChild(document.createTextNode("Profile"));
+  _link.href = "#Profile";
+  _link.addEventListener('click', function () {
+    for (let _child of Customized.childNodes) {
+      if (_child.className === 'active') {
+        _child.setAttribute('class', null);
+      }
+    }
+    _list.setAttribute('class', 'active');
+  }, false);
+  _list.setAttribute('class', 'active');
+  _list.appendChild(_link);
+  Customized.appendChild(_list);
+  // Username
+  let _username = document.getElementById('Username');
+  let _input = document.createElement('input');
+  _input.type = 'text';
+  _input.value = Username;
+  _input.style.marginLeft = '15px';
+  _input.style.paddingLeft = '10px';
+  _username.appendChild(_input);
+  let _submit = document.createElement('input');
+  _submit.setAttribute('class', 'inline-input-users');
+  _submit.type = 'submit';
+  _submit.value = 'Save';
+  _submit.addEventListener('click', function () {
+      setVAR('/ui/profile?username=', _input.value);
+      let _success = document.createElement('span');
+      _success.setAttribute('class', 'success-check');
+      _success.appendChild(document.createTextNode('✔'));
+      _username.appendChild(_success);
+  }, false);
+  _username.appendChild(_submit);
+
+  // Email
+  let _email = document.getElementById('Email');
+  let _input2 = document.createElement('input');
+  _input2.type = 'text';
+  _input2.value = Email;
+  _input2.style.marginLeft = '65px';
+  _input2.style.paddingLeft = '10px';
+  _email.appendChild(_input2);
+  let _submit2 = document.createElement('input');
+  _submit2.setAttribute('class', 'inline-input-users');
+  _submit2.type = 'submit';
+  _submit2.value = 'Save';
+  _submit2.addEventListener('click', function () {
+      setVAR('/ui/profile?email=', _input2.value);
+      let _success2 = document.createElement('span');
+      _success2.setAttribute('class', 'success-check');
+      _success2.appendChild(document.createTextNode('✔'));
+      _email.appendChild(_success2);
+  }, false);
+  _email.appendChild(_submit2);
+
+  // // Password
+  // let _current = document.getElementById('CurrentPW');
+  // let _input3 = document.createElement('input');
+  // _input3.type = 'password';
+  // _input3.value = '';
+  // _input3.style.marginLeft = '15px';
+  // _input3.style.paddingLeft = '10px';
+  // _current.appendChild(_input3);
+
+  let _new = document.getElementById('NewPW');
+  let _input4 = document.createElement('input');
+  _input4.type = 'password';
+  _input4.value = '';
+  _input4.style.marginLeft = '46px';
+  _input4.style.paddingLeft = '10px';
+  _new.appendChild(_input4);
+
+  let _new2 = document.getElementById('NewPW2');
+  let _input5 = document.createElement('input');
+  _input5.type = 'password';
+  _input5.value = '';
+  _input5.style.marginLeft = '46px';
+  _input5.style.paddingLeft = '10px';
+  _new2.appendChild(_input5);
+  let _submit3 = document.createElement('input');
+  _submit3.setAttribute('class', 'inline-input-users');
+  _submit3.type = 'submit';
+  _submit3.value = 'Save';
+  _submit3.addEventListener('click', function () {
+      let _success3 = document.createElement('span');
+      _success3.setAttribute('class', 'success-check');
+      if ((_input4.value === _input5.value) && (_input5.value.length >= 8)) {
+        setVAR('/ui/profile?krabbypattyrecipe=',
+                CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(_input5.value)));
+        _success3.appendChild(document.createTextNode('✔'));
+      }
+      else {
+        _success3.appendChild(document.createTextNode('✘'));
+      }
+      _new2.appendChild(_success3);
+  }, false);
+  _new2.appendChild(_submit3);
+</script>
+{% endblock %}
+
