@@ -17,7 +17,6 @@ import sys
 # gunicorn -w 2 -b :7002 --chdir /opt/webapp app:app
 BASE_PATH = 'data/'
 LOG_PATH = '/var/log/flask/app.log'
-LOG_PATH = 'C:\\Users\\nickb\\Documents\\repo\\basic_flask_app\\app.log'
 
 LOG_LEVEL = logging.DEBUG
 
@@ -34,7 +33,7 @@ LOG_LEVEL = logging.DEBUG
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret key'
-# raise KeyError('You first need to generate a secret key!')
+raise KeyError('You first need to generate a secret key!')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(BASE_PATH, 'database.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 bootstrap = Bootstrap(app)
